@@ -3,3 +3,5 @@ spacy
 googletrans==4.0.0-rc1
 langdetect
 gunicorn
+spacy[transformers]
+spacy-lookups-data
