@@ -1,3 +1,19 @@
+import spacy
+from spacy.cli import download
+
+# Ensure SpaCy models are available
+try:
+    nlp = spacy.load("en_core_web_sm")
+except OSError:
+    download("en_core_web_sm")
+    nlp = spacy.load("en_core_web_sm")
+
+try:
+    nlp_multilang = spacy.load("xx_ent_wiki_sm")
+except OSError:
+    download("xx_ent_wiki_sm")
+    nlp_multilang = spacy.load("xx_ent_wiki_sm")
+
 from flask import Flask, jsonify
 from prepmate import generate_prepmate, suggest_meetings, recommend_resources
 
@@ -77,15 +93,3 @@ def favicon():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
-
-import spacy
-import os
-
-try:
-    nlp = spacy.load("en_core_web_sm")
-except OSError:
-    # Automatically download the model if not available
-    from spacy.cli import download
-    download("en_core_web_sm")
-    nlp = spacy.load("en_core_web_sm")
-
