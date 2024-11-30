@@ -65,6 +65,9 @@ Omi Friend inputs, and past interactions, Gmail, Google Calendar.
  1. Generate Pre-meeting Briefs (Function A).
  2. Provide Meeting Suggestions (Function B).
  3. Suggest Resources (Function C).
+    
+## Try it out!
+https://prepmate-app.onrender.com/
 
 ## ENDPOINT API Usage example
 Defines the Flask server and API endpoints for pre-meeting briefs, meeting suggestions, and resource recommendations.
