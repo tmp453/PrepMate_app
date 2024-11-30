@@ -77,3 +77,15 @@ def favicon():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
+
+import spacy
+import os
+
+try:
+    nlp = spacy.load("en_core_web_sm")
+except OSError:
+    # Automatically download the model if not available
+    from spacy.cli import download
+    download("en_core_web_sm")
+    nlp = spacy.load("en_core_web_sm")
+
