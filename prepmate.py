@@ -1,9 +1,17 @@
 from langdetect import detect
 import spacy
+from spacy.cli import download
 from googletrans import Translator
 
-# Load language models
-spacy_models = {"en": spacy.load("en_core_web_sm"), "xx": spacy.load("xx_ent_wiki_sm")}
+# Function to dynamically load SpaCy models
+def load_model(model_name):
+    try:
+        return spacy.load(model_name)  # Load model if available
+    except OSError:
+        download(model_name)  # Download model if not available
+        return spacy.load(model_name)  # Load model after downloading
+
+# Initialize Translator
 translator = Translator()
 
 # Detect the language of the text
@@ -13,13 +21,13 @@ def detect_language(text):
 # Process text based on its language
 def process_text_multilingual(text):
     language = detect_language(text)
-    if language in spacy_models:
-        nlp = spacy_models[language]
+    if language == "en":
+        nlp = load_model("en_core_web_sm")  # Load English model dynamically
         doc = nlp(text)
         return [(ent.text, ent.label_) for ent in doc.ents]
     else:
-        translated = translator.translate(text, dest="en").text
-        nlp = spacy_models["en"]
+        translated = translator.translate(text, dest="en").text  # Translate to English
+        nlp = load_model("en_core_web_sm")
         doc = nlp(translated)
         return [(ent.text, ent.label_) for ent in doc.ents]
 
@@ -46,7 +54,7 @@ def generate_prepmate(conversations, emails, calendar_events):
     for email in emails:
         prepmate["Time"] = prepmate["Time"] or email.get("timestamp")
         prepmate["Location"] = prepmate["Location"] or email.get("location")
-        
+
         # Ensure 'from' and 'to' fields are lists
         email_from = email.get("from", [])
         email_to = email.get("to", [])
@@ -71,7 +79,6 @@ def generate_prepmate(conversations, emails, calendar_events):
     prepmate["Preparation Suggestions"] = list(set(prepmate["Preparation Suggestions"]))
 
     return prepmate
-
 
 # Suggest meetings
 def suggest_meetings(conversations, emails):
